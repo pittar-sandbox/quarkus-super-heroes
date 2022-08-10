@@ -1,0 +1,76 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  creationTimestamp: '2022-08-10T20:41:48Z'
+  generation: 2
+  managedFields:
+    - apiVersion: tekton.dev/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:finally': {}
+          'f:params': {}
+          'f:resources': {}
+          'f:tasks': {}
+          'f:workspaces': {}
+      manager: Mozilla
+      operation: Update
+      time: '2022-08-10T20:41:48Z'
+  name: rest-fights
+  namespace: heroes
+  resourceVersion: '200394'
+  uid: 8186f866-a848-4feb-8749-ea8db9b04bea
+spec:
+  tasks:
+    - name: git-clone-1-7-0
+      params:
+        - name: url
+          value: 'https://github.com/pittar-sandbox/quarkus-super-heroes.git'
+        - name: submodules
+          value: 'true'
+        - name: depth
+          value: '1'
+        - name: sslVerify
+          value: 'true'
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+        - name: gitInitImage
+          value: >-
+            registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:8949bb90e05704aef387e5b8d7143f2dc807c8c693c59193a9bb54d8c0e43b21
+        - name: userHome
+          value: /tekton/home
+      taskRef:
+        kind: ClusterTask
+        name: git-clone-1-7-0
+      workspaces:
+        - name: output
+          workspace: rest-fights-workspace
+    - name: maven-1-7-0
+      params:
+        - name: MAVEN_IMAGE
+          value: >-
+            image-registry.openshift-image-registry.svc:5000/openshift/java:latest
+        - name: GOALS
+          value:
+            - package
+            - '-DskipTests'
+            - '-Dquarkus.package.type=uber-jar'
+        - name: PROXY_PROTOCOL
+          value: http
+        - name: CONTEXT_DIR
+          value: rest-fights
+      runAfter:
+        - git-clone-1-7-0
+      taskRef:
+        kind: ClusterTask
+        name: maven-1-7-0
+      workspaces:
+        - name: source
+          workspace: rest-fights-workspace
+        - name: maven-settings
+          workspace: rest-fights-workspace
+  workspaces:
+    - name: rest-fights-workspace
