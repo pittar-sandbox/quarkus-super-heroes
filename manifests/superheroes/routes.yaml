@@ -1,0 +1,145 @@
+apiVersion: v1
+items:
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+      prometheus.io/path: /metrics
+      prometheus.io/port: "8080"
+      prometheus.io/scheme: http
+      prometheus.io/scrape: "true"
+    labels:
+      app: apicurio
+      app.openshift.io/runtime: apicurio
+      application: fights-service
+      system: quarkus-super-heroes
+    name: apicurio
+    namespace: sht
+  spec:
+    host: apicurio-sht.apps.cluster-fxccc.fxccc.sandbox380.opentlc.com
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: apicurio
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+      app.openshift.io/connects-to: fights-db,fights-kafka,apicurio,rest-villains,rest-heroes,otel-collector
+      app.openshift.io/vcs-url: <<unknown>>
+      app.quarkus.io/build-timestamp: 2022-08-09 - 18:28:26 +0000
+      app.quarkus.io/commit-id: bce4aa8ed57567c928c406a4170ac5651b78a4af
+      openshift.io/host.generated: "true"
+    labels:
+      app: rest-fights
+      app.kubernetes.io/name: rest-fights
+      app.kubernetes.io/part-of: fights-service
+      app.kubernetes.io/version: "1.0"
+      app.openshift.io/runtime: quarkus
+      application: fights-service
+      system: quarkus-super-heroes
+    name: rest-fights
+    namespace: sht
+  spec:
+    host: rest-fights-sht.apps.cluster-fxccc.fxccc.sandbox380.opentlc.com
+    port:
+      targetPort: 8082
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: rest-fights
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+      app.openshift.io/connects-to: heroes-db,otel-collector
+      app.openshift.io/vcs-url: <<unknown>>
+      app.quarkus.io/build-timestamp: 2022-08-09 - 18:14:44 +0000
+      app.quarkus.io/commit-id: bce4aa8ed57567c928c406a4170ac5651b78a4af
+      openshift.io/host.generated: "true"
+    labels:
+      app: rest-heroes
+      app.kubernetes.io/name: rest-heroes
+      app.kubernetes.io/part-of: heroes-service
+      app.kubernetes.io/version: "1.0"
+      app.openshift.io/runtime: quarkus
+      application: heroes-service
+      system: quarkus-super-heroes
+    name: rest-heroes
+    namespace: sht
+  spec:
+    host: rest-heroes-sht.apps.cluster-fxccc.fxccc.sandbox380.opentlc.com
+    port:
+      targetPort: 8083
+    to:
+      kind: Service
+      name: rest-heroes
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+      app.openshift.io/connects-to: villains-db,otel-collector
+      app.openshift.io/vcs-url: <<unknown>>
+      app.quarkus.io/build-timestamp: 2022-08-09 - 18:02:44 +0000
+      app.quarkus.io/commit-id: bce4aa8ed57567c928c406a4170ac5651b78a4af
+      openshift.io/host.generated: "true"
+    labels:
+      app: rest-villains
+      app.kubernetes.io/name: rest-villains
+      app.kubernetes.io/part-of: villains-service
+      app.kubernetes.io/version: "1.0"
+      app.openshift.io/runtime: quarkus
+      application: villains-service
+      system: quarkus-super-heroes
+    name: rest-villains
+    namespace: sht
+  spec:
+    host: rest-villains-sht.apps.cluster-fxccc.fxccc.sandbox380.opentlc.com
+    port:
+      targetPort: 8084
+    to:
+      kind: Service
+      name: rest-villains
+      weight: 100
+    wildcardPolicy: None
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    annotations:
+      openshift.io/host.generated: "true"
+    labels:
+      app: superheros-ui
+      app.kubernetes.io/component: superheros-ui
+      app.kubernetes.io/instance: superheros-ui
+      app.kubernetes.io/name: superheros-ui
+      app.kubernetes.io/part-of: fights-service
+      app.openshift.io/runtime: java
+      app.openshift.io/runtime-version: openjdk-17-ubi8
+    name: superheros-ui
+    namespace: sht
+  spec:
+    host: superheros-ui-sht.apps.cluster-fxccc.fxccc.sandbox380.opentlc.com
+    port:
+      targetPort: 8080-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: superheros-ui
+      weight: 100
+    wildcardPolicy: None
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

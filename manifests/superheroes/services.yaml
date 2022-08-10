@@ -1,0 +1,263 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/path: /metrics
+      prometheus.io/port: "8080"
+      prometheus.io/scheme: http
+      prometheus.io/scrape: "true"
+    labels:
+      application: fights-service
+      name: apicurio
+      system: quarkus-super-heroes
+    name: apicurio
+    namespace: sht
+  spec:
+    clusterIP: 172.30.105.16
+    clusterIPs:
+    - 172.30.105.16
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 8080
+    selector:
+      name: apicurio
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      application: fights-service
+      name: fights-db
+      system: quarkus-super-heroes
+    name: fights-db
+    namespace: sht
+  spec:
+    clusterIP: 172.30.14.105
+    clusterIPs:
+    - 172.30.14.105
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 27017
+    selector:
+      name: fights-db
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      application: fights-service
+      name: fights-kafka
+      system: quarkus-super-heroes
+    name: fights-kafka
+    namespace: sht
+  spec:
+    clusterIP: 172.30.89.84
+    clusterIPs:
+    - 172.30.89.84
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 9092
+    selector:
+      name: fights-kafka
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      application: heroes-service
+      name: heroes-db
+      system: quarkus-super-heroes
+    name: heroes-db
+    namespace: sht
+  spec:
+    clusterIP: 172.30.196.247
+    clusterIPs:
+    - 172.30.196.247
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 5432
+    selector:
+      name: heroes-db
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      app.openshift.io/connects-to: fights-db,fights-kafka,apicurio,rest-villains,rest-heroes,otel-collector
+      app.openshift.io/vcs-url: <<unknown>>
+      app.quarkus.io/build-timestamp: 2022-08-09 - 18:28:26 +0000
+      app.quarkus.io/commit-id: bce4aa8ed57567c928c406a4170ac5651b78a4af
+      prometheus.io/path: /q/metrics
+      prometheus.io/port: "8082"
+      prometheus.io/scheme: http
+      prometheus.io/scrape: "true"
+    labels:
+      app: rest-fights
+      app.kubernetes.io/name: rest-fights
+      app.kubernetes.io/part-of: fights-service
+      app.kubernetes.io/version: "1.0"
+      app.openshift.io/runtime: quarkus
+      application: fights-service
+      system: quarkus-super-heroes
+    name: rest-fights
+    namespace: sht
+  spec:
+    clusterIP: 172.30.173.144
+    clusterIPs:
+    - 172.30.173.144
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 80
+      targetPort: 8082
+    selector:
+      app.kubernetes.io/name: rest-fights
+      app.kubernetes.io/part-of: fights-service
+      app.kubernetes.io/version: "1.0"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      app.openshift.io/connects-to: heroes-db,otel-collector
+      app.openshift.io/vcs-url: <<unknown>>
+      app.quarkus.io/build-timestamp: 2022-08-09 - 18:14:44 +0000
+      app.quarkus.io/commit-id: bce4aa8ed57567c928c406a4170ac5651b78a4af
+      prometheus.io/path: /q/metrics
+      prometheus.io/port: "8083"
+      prometheus.io/scheme: http
+      prometheus.io/scrape: "true"
+    labels:
+      app: rest-heroes
+      app.kubernetes.io/name: rest-heroes
+      app.kubernetes.io/part-of: heroes-service
+      app.kubernetes.io/version: "1.0"
+      app.openshift.io/runtime: quarkus
+      application: heroes-service
+      system: quarkus-super-heroes
+    name: rest-heroes
+    namespace: sht
+  spec:
+    clusterIP: 172.30.137.130
+    clusterIPs:
+    - 172.30.137.130
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 80
+      targetPort: 8083
+    selector:
+      app.kubernetes.io/name: rest-heroes
+      app.kubernetes.io/part-of: heroes-service
+      app.kubernetes.io/version: "1.0"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      app.openshift.io/connects-to: villains-db,otel-collector
+      app.openshift.io/vcs-url: <<unknown>>
+      app.quarkus.io/build-timestamp: 2022-08-09 - 18:02:44 +0000
+      app.quarkus.io/commit-id: bce4aa8ed57567c928c406a4170ac5651b78a4af
+      prometheus.io/path: /q/metrics
+      prometheus.io/port: "8084"
+      prometheus.io/scheme: http
+      prometheus.io/scrape: "true"
+    labels:
+      app: rest-villains
+      app.kubernetes.io/name: rest-villains
+      app.kubernetes.io/part-of: villains-service
+      app.kubernetes.io/version: "1.0"
+      app.openshift.io/runtime: quarkus
+      application: villains-service
+      system: quarkus-super-heroes
+    name: rest-villains
+    namespace: sht
+  spec:
+    clusterIP: 172.30.181.234
+    clusterIPs:
+    - 172.30.181.234
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 80
+      targetPort: 8084
+    selector:
+      app.kubernetes.io/name: rest-villains
+      app.kubernetes.io/part-of: villains-service
+      app.kubernetes.io/version: "1.0"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      app.openshift.io/vcs-ref: ""
+      app.openshift.io/vcs-uri: https://github.com/pittar-sandbox/quarkus-super-heroes.git
+      openshift.io/generated-by: OpenShiftWebConsole
+    labels:
+      app: superheros-ui
+      app.kubernetes.io/component: superheros-ui
+      app.kubernetes.io/instance: superheros-ui
+      app.kubernetes.io/name: superheros-ui
+      app.kubernetes.io/part-of: fights-service
+      app.openshift.io/runtime: java
+      app.openshift.io/runtime-version: openjdk-17-ubi8
+    name: superheros-ui
+    namespace: sht
+  spec:
+    clusterIP: 172.30.109.251
+    clusterIPs:
+    - 172.30.109.251
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: 8080-tcp
+      port: 8080
+    - name: 8443-tcp
+      port: 8443
+    selector:
+      app: superheros-ui
+      deploymentconfig: superheros-ui
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      application: villains-service
+      name: villains-db
+      system: quarkus-super-heroes
+    name: villains-db
+    namespace: sht
+  spec:
+    clusterIP: 172.30.15.210
+    clusterIPs:
+    - 172.30.15.210
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 5432
+    selector:
+      name: villains-db
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

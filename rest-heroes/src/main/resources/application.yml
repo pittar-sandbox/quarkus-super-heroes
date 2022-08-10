@@ -7,6 +7,9 @@ paths:
 quarkus:
   application:
     name: rest-heroes
+quarkus:
+  kubernetes-client:
+    trust-certs: true
   log:
     level: INFO
     category:
