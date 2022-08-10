@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   creationTimestamp: '2022-08-10T19:52:31Z'
-  generation: 4
+  generation: 5
   managedFields:
     - apiVersion: tekton.dev/v1beta1
       fieldsType: FieldsV1
@@ -19,7 +19,7 @@ metadata:
       time: '2022-08-10T19:52:31Z'
   name: rest-villains-pipeline
   namespace: heroes
-  resourceVersion: '166480'
+  resourceVersion: '227731'
   uid: 3acf4180-951b-49f7-b12b-45131bf00a1e
 spec:
   tasks:
@@ -71,6 +71,32 @@ spec:
         - name: source
           workspace: rest-villains-workspace
         - name: maven-settings
+          workspace: rest-villains-workspace
+    - name: buildah-1-7-0
+      params:
+        - name: IMAGE
+          value: >-
+            image-registry.openshift-image-registry.svc:5000/heroes/rest-villains:latest
+        - name: BUILDER_IMAGE
+          value: >-
+            registry.redhat.io/rhel8/buildah@sha256:23fb7971ea6ac4aaaaa1139473a602df0df19222a3b5a76b551b2b9ddd92e927
+        - name: STORAGE_DRIVER
+          value: vfs
+        - name: DOCKERFILE
+          value: ./Containerfile
+        - name: CONTEXT
+          value: rest-villains
+        - name: TLSVERIFY
+          value: 'true'
+        - name: FORMAT
+          value: oci
+      runAfter:
+        - maven-1-7-0
+      taskRef:
+        kind: ClusterTask
+        name: buildah-1-7-0
+      workspaces:
+        - name: source
           workspace: rest-villains-workspace
   workspaces:
     - name: rest-villains-workspace
